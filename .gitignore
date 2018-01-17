@@ -3,7 +3,7 @@
 #  Makefile.in's
 #  Files created by configure
 
-Makefile.in
+Makefile
 config.log
 config.status
 *.o
