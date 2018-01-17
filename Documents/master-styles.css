@@ -1,0 +1,44 @@
+/*------------------------------------------------------------------------------
+
+                                 Description
+                                 ===========
+
+     Begin:                     19 March, 2017
+     Copyright:                 (C) 2017 by Simo
+
+     Note: Master style sheet for the on-line help
+
+*******************************************************************************/
+
+body
+{
+	background-image: url(Images/gray-backer.gif);
+	font-family: Arial, Helvetica, courier, Veranda, "Times New Roman", sans-serif;
+	font-style: normal;
+	font-weight: normal;
+	font-stretch: normal;
+	color: black;
+	background-color: white;
+	font-size: 100%;
+	margin-left: 2cm;
+	margin-right: 2cm;
+	text-align: left;
+}
+
+@media print
+{
+	body
+	{
+		padding-top: 2cm; padding-bottom: 2cm;
+		padding-left: 3.175cm; padding-right: 3.175cm;
+	}
+}
+
+h1, h2, h3 { text-align: center }
+div.indent { text-indent: 2cm }
+
+a:link { color: #ffbd4e }
+a:hover { color: yellow }
+a:visited { color: #688081 }
+
+td { padding-right: 2cm }

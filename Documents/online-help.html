@@ -1,0 +1,51 @@
+<!-- online-kelp.html
+Written: 19 March, 2017 -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="master-styles.css">
+<title>About the On-Line Help</title>
+</head>
+
+<a name="BEGIN"></a>
+<h1 class="center">About the On-Line Help</h1>
+
+<p>The Filter Designer on-line help opens a web browser to view this help. A list of possible 
+browsers is found in the file: &lt;prefix&gt;/filterdesigner-x.y.z/etc/browserpaths.cfg. 
+The application simply searches through this list until it finds the first browser that's available 
+on the system. If you want the help to open in a different browser, you may edit this file in order 
+to place your favorite browser at the head of the list. To do this, you will need the exact path to 
+the desired browser. An example of this is: /usr/bin/firefox or /usr/local/bin/firefox. You 
+can use the "whereis" command to locate the executable, or search for it with your favorite file 
+management utility. The file list also serves as a good example for making edits. Once you have your 
+desired browser located, it is a good idea to test the path by entering it, along with an HTML file, 
+at the command prompt to see if the system can open it. If this works from a command prompt, it will 
+also work when invoked by the application.</p>
+
+<p>It is most essential that any comments you add must start in the <i>first column 
+only!</i>. The application doesn't use any fancy text parsers to read this config file, so comments 
+that start off the first column will cause the app to fail to recognize this as a comment. For this 
+purpose, more sophisticated parsing just isn't necessary. Also, make certain that you don't either 
+deliberately or accidentally indent a new entry. That, too, will cause a failure to read 
+properly.</p>
+
+<p>As with any config file, it 
+is an <i>extremely</i> good idea to first make a copy of the pre-existing file, but with a different 
+extension (e.g. browserpaths.config.orig) This way, if you FUBAR the new file, you still have the 
+old one available for recovery. Once you've verified that the new entry(ies) actually work, you 
+could delete the old config file. However, since it's not such a large file, it would be a good idea 
+to leave it in place. You can never be sure you won't be needing it again.</p>
+
+<a name="DAIG"></a>
+<h3 class="center"><a name="DIAGNOS">Diagnostics</a></h3>
+
+<p>The app may be compiled in order to provide instrumentation that displays intermediate results of the various calculations. (See <i>INSTALL</i> for details). This feature is always available if you start filterdesigner from a command line. This is provided for those cases where results seem peculiar. Sometimes this is due to user error, yet, at others, it simply may not be possible to solve the characteristic equations that the filter designer generates. Most of these contingencies are accounted for, but there is always the possibility that something got missed, given that we never know what the user will enter, either deliberately or by a missed keystroke that wasn't noticed before hitting "OK". The FOX libraries will return the value "NaN (Not a Number" in cases like divide by zero or extracting the square root of a negative number, rather than allowing the whole app to crash with a system error. Results that look strange may be due to such causes if you check the intermediate values.</p>
+
+<hr align="left" size="2" width="100%" />
+<div align="center"><a href="#BEGIN"><img src="Images/begin-btn.gif" alt="Top" title="Click here to return to top" width="68" height="32"></a></div>
+
+</body>
+</html>
+
+

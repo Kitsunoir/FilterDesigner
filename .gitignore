@@ -1,0 +1,10 @@
+#  Git ignore files
+#  Ignore all object files
+#  Makefile.in's
+#  Files created by configure
+
+Makefile.in
+config.log
+config.status
+*.o
+*~

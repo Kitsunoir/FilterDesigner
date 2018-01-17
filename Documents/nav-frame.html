@@ -1,0 +1,140 @@
+<!-- nav-frame.html
+Written: 19 March, 2017 -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+  <meta name="copyright" content="Copyright (c)2017" />
+  <meta name="description" content="Navigation Frame" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<style>
+  body { background-color: #000088 }
+  a.menu:link { color: #000088 }
+  a.menu:visited { color: #000088 }
+  a.menu:hover { color: #000088; cursor: crosshair; }
+
+  table.menu { background: #000088 }
+  td.menu { cursor: crosshair }
+</style>
+
+<script language="javascript" type="text/javascript">
+
+<!--
+
+//       On Images
+
+var CredOn=    new Image();
+var DiagOn=    new Image();
+var FileOn=    new Image();
+var GplOn=     new Image();
+var HelpOn=    new Image();
+var MainWinOn= new Image();
+var ProjwinOn= new Image();
+var WhatOn=    new Image();
+
+//      Off Images
+
+var CredOff=    new Image();
+var DiagOff=    new Image();
+var FileOff=    new Image();
+var GplOff=     new Image();
+var HelpOff=    new Image();
+var MainWinOff= new Image();
+var ProjwinOff= new Image();
+var WhatOff=    new Image();
+
+//      On Image Sources
+
+CredOn.src=    "Images/cred-on.gif";
+DiagOn.src=    "Images/diag-on.gif";
+FileOn.src=    "Images/file-on.gif";
+GplOn.src=     "Images/gpl-on.gif";
+HelpOn.src=    "Images/help-on.gif";
+MainWinOn.src= "Images/main-win-on.gif";
+ProjwinOn.src= "Images/projwin-on.gif";
+WhatOn.src=    "Images/what-on.gif";
+
+//      Off Image Sources
+
+CredOff.src=    "Images/cred-off.gif";
+DiagOff.src=    "Images/diag-off.gif";
+FileOff.src=    "Images/file-off.gif";
+GplOff.src=     "Images/gpl-off.gif";
+HelpOff.src=    "Images/help-off.gif";
+MainWinOff.src= "Images/main-win-off.gif";
+ProjwinOff.src= "Images/projwin-off.gif";
+WhatOff.src=    "Images/what-off.gif";
+
+/*
+     Name: Animate
+
+     Type: Subroutine
+
+     Parameters: ImgName (String) -- The name of the document image.
+                 Source (Image Object)  -- The new image to be displayed
+
+     Note: Responds to mouse events to animate highlighting of hyperlinks.
+*/
+
+function Animate(ImgName, Source)
+{
+    document.images[ImgName].src= Source.src;
+}
+
+//-->
+</script>
+
+<body>
+<table align="center" cellspacing="10">
+    <tr><th style="color: yellow">Navigation</th></tr>
+    <tr>
+      <td class="menu" onmouseover="Animate('Begin', MainWinOn)" onmouseout="Animate('Begin', MainWinOff)">
+	<a class="menu" href="app-welcome.html#BEGIN" target="DISPLAY"><img src="Images/main-win-off.gif" alt="Home" name="Begin" /></a>
+	</td>
+    </tr>
+    <tr>
+        <td class="menu" onmouseover="Animate('File', FileOn)" onmouseout="Animate('File', FileOff)">
+        <a class="menu" href="app-welcome.html#FILE" target="DISPLAY"><img src="Images/file-off.gif" alt="File link" name="File" /></a>
+        </td>
+    </tr>
+    <tr>
+        <td class="menu" onmouseover="Animate('Help', HelpOn)" onmouseout="Animate('Help', HelpOff)">
+        <a class="menu" href="app-welcome.html#HELP" target="DISPLAY"><img src="Images/help-off.gif" alt="Help sublink"
+         name="Help" /></a>
+         </td>
+    </tr>
+    <tr>
+	<td class="menu" onmouseover="Animate('Proj', ProjwinOn)" onmouseout="Animate('Proj', ProjwinOff)">
+	  <a class="menu" href="design-pane.html#BEGIN" target="DISPLAY"><img src="Images/projwin-off.gif" alt="Designer Panel" 
+         name="Proj" /></a>
+        </td>
+    </tr>
+    <tr>
+        <td class="menu" onmouseover="Animate('OnlineHelp', HelpOn)" onmouseout="Animate('OnlineHelp', HelpOff)">
+	  <a class="menu" href="online-help.html#BEGIN" target="DISPLAY"><img src="Images/help-off.gif" alt="Help link"
+           name="OnlineHelp" /></a>
+	</td>
+    <tr>
+        <td class="menu" onmouseover="Animate('Diagnostic', DiagOn)" onmouseout="Animate('Diagnostic', DiagOff)">
+	  <a class="menu" href="online-help.html#DIAG" target="DISPLAY"><img src="Images/diag-off.gif" alt="Diagnostics"
+           name="Diagnostic" /></a>
+	</td>
+    </tr>
+    <tr>
+        <td class="menu" onmouseover="Animate('Credit', CredOn)" onmouseout="Animate('Credit', CredOff)">
+	  <a class="menu" href="credits.html#BEGIN" target="DISPLAY"><img src="Images/cred-off.gif" alt="Credits"
+           name="Credit" /></a>
+	</td>
+    </tr>
+    <tr>
+        <td class="menu" onmouseover="Animate('What', WhatOn)" onmouseout="Animate('What', WhatOff)">
+          <a class="menu" href="credits.html#WHAT_IT_IS" target="DISPLAY"><img src="Images/what-off.gif" alt="What it is"
+          name="What" />
+	</td>
+    </tr>
+</table>
+
+</body>
+</html>

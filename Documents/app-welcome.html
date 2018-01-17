@@ -1,0 +1,99 @@
+<!-- app-welcome.html
+Written: 19 March, 2017 -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="master-styles.css">
+<title>Filter Designer On-line Help</title>
+</head>
+<body>
+<a name="BEGIN"></a>
+<h1 style="text-align: center">Main Window</h1>
+
+<p>The appearance of the application on start-up: the main viewing area displays the "welcome" screen when there is no current project in progress. The window is divided into five parts (from top to bottom) main menu bar, convenience tool bar, the image viewer pane, the command button bar, and the status bar. The various menu items, and their corresponding tool bar buttons gray out if not actually required. as do the command buttons. The application window is resizable via the drag corner in the lower right-hand corner.</p>
+
+<p>Both the main menu and toolbar are dockable, both within the main window, or outside of it.</p>
+
+<p>&nbsp;</p>
+<div align="center"><img src="Images/welcome-screen.gif" alt="Welcome Screen" border="2" /></div>
+<p>&nbsp;</p>
+
+<h3>Main Menu</h3>
+
+<a name="FILE"></a>
+<p><b>File Menu</b></p>
+
+<p><i>New Project</i>:<br />
+<div class="indent">This button and its tool bar button (light bulb icon) starts a new project. It may be clicked multiple times to do different designs without having to restart the application every time.</div></p>
+
+<p><i>Save as...</i>:<br />
+<div class="indent">Invokes the file save dialog when a project is completed. Corresponding tool bar button: diskette icon.</div></p>
+
+<p<i>Print...</i>:<br />
+<div class="indent">Invoke the print dialog to make hard copy of the project. There is also a tool bar button for this: printer icon.</div></p>
+
+<p><i>Cancel</i>:<br />
+<div class="indent">This button resets the entire application, putting it into its initial start-up configuration. Use in case of a serious, but non-fatal run time error, or to start new projects. No corresponding tool bar or command buttons.</div></p>
+
+<p><i>Exit</i>:<br />
+<div class="indent">Exit the application. Corresponding command button: Exit. Will prompt if there is a complete project which hasn't been saved yet</div></p>
+
+<a name="EDIT"></a>
+<p><b>Project Menu</b></p>
+
+<p><i>Passive BPF</i>:<br />
+<div class="indent">This menu item selects a passive bandpass filter. This being the Butterworth derived passive filters.</div></p>
+
+<p><i>Active BPF</i>:<br />
+<div class="indent">Selects an active BPF design, either multi-feedback or state variable.</div></p>
+
+<p><i>Passive Fltr</i>:<br />
+<div class="indent">Selects a passive filter design.</div></p>
+
+<p><i>Active Fltr</i>:<br />
+<div class="indent">Selects an active filter design based on the Sallen-Key topology.</div></p>
+
+<a name="HELP"></a>
+<p><b>Help Menu</b></p>
+
+<p><i>Contents...</i>:<br />
+<div class="indent">Display the application on-line help. This invokes a web browser to display this help.</div></p>
+
+<p><i>About...</i>:<br />
+<div class="indent">Show the "About" dialog box.</div></p>
+
+<p><i>Dolphins...</i></p>: <br />
+<div class="indent">A special message from the developers.</div></p>
+
+<h3>Tool Bar</h3>
+
+<p>The tool bar buttons duplicate some of the more common main menu items. The buttons are icon only. However, hovering over a button will bring up a brief tool tip, and a more detailed description appears in the status bar.</p>
+
+<h3>Viewer</h3>
+
+<p>The welcome screen and completed projects are displayed in this pane. Project files are saved as *.gif images. These may be saved to the hard drive and/or printed as hard copy. These files may be viewed with almost any image viewer program, so that it is not necessary to start up the application if you need to consult the results of a completed project.</p>
+
+<h3>Command Buttons</h3>
+
+<p><i>OK</i>:<br />
+<div class="indent">This button finalizes a project. Will prompt if there are any entry errors. Project results are shown on the main window.</div></p>
+
+<p><i>Clear</i>:<br />
+<div class="indent">Removes all user entered data without resetting the whole project.</div></p>
+
+<p><i>Exit</i>:<br />
+<div class="indent">Exit the application. Will prompt if there is any unsaved data.</div></p>
+
+<h3>Status Bar</h3>
+
+<p>The status bar has several text display areas. The main one shows the application status as well as displaying more verbose tool tips. Project status is also shown here. There is a convenient LED icon.<br />
+LED gray: no project started yet.<br />
+LED off: Project in progress or complete, but not saved.<br />
+LED on: Project complete and saved.</p>
+
+<hr align="left" size="2" width="100%" />
+<div align="center"><a href="#BEGIN"><img src="Images/begin-btn.gif" alt="Top" title="Click here to return to top" width="68" height="32"></a></div>
+
+</body>
+</html>

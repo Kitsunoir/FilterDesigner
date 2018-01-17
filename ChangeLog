@@ -1,0 +1,13 @@
+---------------------------------- ChangeLog  ----------------------------------
+
+
+* 12 January, 2017
+
+	Begin project.
+
+* 8 December, 2017
+
+	Minor Bug Fix: Without a working MPSolve, popen fails silently:
+		       Add detection to avoid using it in the code.
+		       Added advisory dialog if MPSolve not unstalled.
+

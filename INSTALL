@@ -1,0 +1,207 @@
+----------------------------------- INSTALL  -----------------------------------
+
+Installed Files
+===============
+
+  I)  Filter Designer       - The executable: /usr/local/bin
+
+ II)  Documents             - Directory: Application on-line help *.html files
+                                         /usr/local/filterdesigner-x.y.z/Documents/
+
+ IV)  Images                - Directory: Image files for use by the on-line help:
+                                         /usr/local/filterdesigner-x.y.z/Documents/Images/
+
+  V)  etc                   - Directory: /usr/local/filterdesigner-x.y.z/etc/
+
+ VI)  Man Page              - Program man page: /usr/share/man/man1 or /usr/local/share/man/man1
+
+VII)  Fox Registry          - A program-created file: Location: ~/.foxrc/Simo/filterdesigner
+                              This file is created and maintained by the FOX libs.
+
+These file system locations are partly or wholly determined by "configure", with
+locations such as: "/usr/local/bin", "/usr/local/share", "/usr/local/doc", etc
+being widely known defaults. These may be changed during install, if desired.
+
+Dependencies
+============
+
+Filter Designer has a direct dependency on the FOX shared libs, obviously.
+The application was compiled against the 1.6.50 version of the FOX libs. If you
+don't have it, or an older version won't work, the "tarball" for FOX is included:
+fox-1.6.50.tar.gz. It's best to copy that file to another directory, and unload it
+there. FOX includes its own instructions for compiling and installing. Since FOX
+is a complete GUI application toolkit, it comes with considerably more than just
+the shared libraries and the FOX headers that you will need to compile this app.
+Even if you never write a FOX app yourself, there are some pretty nice "freebies"
+as well. (Check out the FOX calculator and the Adie text editor).
+
+If these dependencies aren't met on your system, the installation of
+Filter Designer will fail. "configure" will flag these errors, in case it
+detects a dependency problem.
+
+There is an additional dependency on an application: "MPSolve" that extracts the
+roots of polynomials. While this isn't strictly necessary, the functionality will
+be impaired if you don't have it installed. The tarball is included. This package
+can be run "in place" or moved to some other location. It is assumed that you
+will install it in "/usr/lib" or "/usr/local/lib". Some distros are set up to
+run both 32 bit and 64 bit programs. In these cases, you will find paths:
+"/usr/lib64" and "/usr/local/lib64". These are the paths you should use. Once
+MPSolve is compiled, the MPSolve directory can be moved to your preferred
+location. The other possibility is editing the src/locations.h.in (MP_SOLVE macro)
+file before configuring and compiling.
+
+Install:
+========
+
+General Principles:
+
+The package contains a shell script called "configure". This script tries to make
+educated guesses as to various system-dependent values and assign these to
+makefile variables. It also uses the most common system-independent defaults.
+Once this is done, configure creates the "Makefile"'s that are included in the
+main directory as well as all the subdirectories. "configure" also creates
+other files, such as *.h files, and other files derived from *.in files. As
+with makefiles, this involves variable substitution. Other generated files
+include: "config.status", useful should you want to recreate the current system
+configuration, "config.cache", test results that help speed up a configure recreation,
+and "config.log", saved compiler messages useful for debugging configure.
+
+The "autoconf" program is used to generate the "configure" file from a developer-
+written file: configure.in. "autoconf" runs various tests on the system to
+derive system characteristics, to locate available programs, locate shared libraries,
+and functions. "autoconf" works with automake to configure a package that can work
+on many different *NIX systems with minimal source code rewrites for the
+developer(s).
+
+1)  Configure -
+
+Once the "tarball" is unloaded, cd into the package directory where the configure
+script is located. Then enter: "./configure" (no quotes) at the command prompt.
+This will run the script to configure the package to your system. If you need any
+additional assistance, you can enter "./configure --help", to see a synopsis of
+the configure options. Depending on how large the package is, it can take some
+considerable time to run configure. "configure" prints out a rather good amount
+of advisory messages so that you won't be left wondering if it simply crashed
+silently. Most of these messages are useful only to the developer. If you don't
+want to be bothered by this, there is a configure option to suppress these
+messages (see ./configure --help for details), or you can simply redirect all
+configure output to the universal digital black hole: ./configure > /dev/null.
+
+One feature that I added to configure is: --enable-optimum.
+This option will compile the program without any debug symbols included in the
+executable. This makes for a compact executable, although you won't be able to
+run it with a debugger. This option will reduce the size of the executable
+considerably. As the configure step is completed, a message box is printed to
+standard output announcing this, and which gives additional reminders for
+completeing the compile and install steps.
+
+Another option is --enable-instr to turn on debug instrumentation. When started
+from a command line, this prints to stdout various intermediate results. Helpful
+for ferreting out unexpected logical errors.
+
+2)  Make -
+
+This step does the compiling to produce the executable. At the command prompt,
+simply enter "make". The included makefiles do the rest. Both make and GCC
+write messages to standard output so you can see how the package build is
+progressing.
+
+3)  Install -
+
+The included makefiles take care of the installation. It will probably be
+necessary to su to root in order to complete the install. Once you've logged
+on with full root priviledges, enter: "make install" at the command prompt.
+Again, the makefiles take care of getting the necessary components installed.
+You can now run the program. Further details for using Filter Designer is
+available via the on-line help. This can be invoked from either the toolbar or
+from the main menu.
+
+Other Make Options:
+
+*  make clean - Remove all the object files (*.o), and copies of the
+                executable(s).
+
+*  make distclean - Remove all files created by configure
+
+*  make maintainer-clean - Remove all autoconf and automake generated files.
+                           Useful mainly for the developer(s) during the
+                           package's development and debugging stages prior
+                           to release.
+
+Trouble Shooting Make:
+======================
+
+This program should compile and install on any Linux distro. However, there
+can be one potential problem if the compiler is named something other than
+g++. There are a few distros like that. If you get a configure
+error of this nature ("g++ not found") you can try these corrective measures:
+
+1)  If you're using BASH, you can invoke configure from the command line with
+    the necessary configure variables set to whatever your system calls its
+    C++ compiler:
+
+        $ CC=g++2 ./configure [more options]
+
+    If you aren't using BASH (or don't have it on your system), the shell you
+    are using has its own equivalents for this operation.
+
+2)  Try deleting the files: configure, Makefile.in, missing, install-sh, and
+    mkinstalldirs. Remove Makefile.in from all subdirectories as well. Then
+    run "aclocal", "automake", and "autoconf".
+
+3)  If that doesn't work, you may also try editing the configure script,
+    replacing all references to "g++" with whatever the actual compiler name
+    is that's on your system. This can get awfully tedious when large
+    configure scripts are involved.
+
+4)  The fourth  alternative is to create symlinks in your /usr/bin directory
+    that give the names that configure is looking for, and which point to
+    your system's compiler(s). Ex:
+
+        $ ln -s gcc2 gcc
+        $ ln -s g++2 g++
+
+Installation Options
+====================
+
+By default, make will install to: /usr/local/bin, /usr/local/doc, /usr/local/share,
+etc. These defaults being defined by autoconf, and included in the configure
+script. For the most part, these are good choices and seldom need to be altered.
+Should you desire to install elsewhere, configure provides for this. You can
+learn more about it by entering "./configure --help".
+
+Some Configure Options -
+
+*  --prefix=PATH
+
+*  --exec-prefix=PATH
+
+*  --bindir=PATH
+
+Running Filter Designer:
+==============================
+
+Should you need to install FOX, you will also need to do the following:
+
+1) su to root, and edit your /etc/ld.so.conf file to include this line:
+
+      /usr/local/lib (if it's not there already)
+
+2) Next run the /sbin/ldconfig script to add the new library to the
+   environment path. You will have to run this script every time you add
+   new shared libs to /usr/local/lib. So even if that path is already
+   there, be sure to run /sbin/ldconfig. (Note: Some distros will run
+   ldconfig on start-up (Slackware does this). In that case, if you
+   have the path to the FOX libs in /etc/ld.so.conf, simply reboot.)
+
+You should now be able to start Filter Designer directly. You can
+then complete the install by adding Filter Designer to your desktop
+menu, if desired. (You can always start it from an X-term, or use the
+"Run" command.)
+
+Once the app is running, additional assistance is available via the
+on-line help. This may be accessed from either the main menu or the
+toolbar. The toolbar buttons have both the tooltips, and more verbose
+descriptions displayed in the status bar.
+
+----------------------------------- INSTALL  -----------------------------------

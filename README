@@ -1,0 +1,18 @@
+------------------------------------ README ------------------------------------
+
+NetworkDesigner is a graphical program for the design of impedance matching
+networks. Included are nine of the most widely used topologies. The simplest
+ones don't allow for the independent selection of Q-factor. Three reactance
+matching networks, however, do allow for this within reason, of course.
+
+Project results may be printed in both graphical form and a text-only
+form. The FOX library assumes a Post Script printed, and some of the
+Linux compatable printers use something a bit different these days.
+
+See the on-line help for further details on using NetworkDesigner.
+
+Filter Designer was developed with the FOX toolkit (http://www.fox-toolkit.org),
+XEMACS (http://www.xemacs.org),
+and Data Display Debugger
+
+------------------------------------ README ------------------------------------

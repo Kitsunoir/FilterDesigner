@@ -1,0 +1,65 @@
+//------------------------------- locations.h  ---------------------------------
+
+/***************************************************************************
+                            -  Description
+                             -------------------
+    Begin                : 19 March, 2017
+    Copyright            : (C) 2017 by Simo
+    E-Mail               : simo@furrydolphin.net
+    Version              : 1.0.0
+ **************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *                                                                         *
+ *   If software can be free, why can't dolphins?                          *
+ *                                                                         *
+ ***************************************************************************/
+
+/*
+       Note: This file contains the locations of the various application
+             support files. It is created at configure time. DO NOT EDIT!
+*/
+
+#ifndef LOCS_H
+#define LOCS_H
+
+//                          Circuit Diagrams: Active Filters
+
+#define ACTIVE_HPE_PIC "@prefix@/@PACKAGE@-@VERSION@/Schemos/ActiveHP_even.gif"
+#define ACTIVE_HPO_PIC "@prefix@/@PACKAGE@-@VERSION@/Schemos/ActiveHP_odd.gif"
+#define ACTIVE_LPE_PIC "@prefix@/@PACKAGE@-@VERSION@/Schemos/ActiveLP_even.gif"
+#define ACTIVE_LPO_PIC "@prefix@/@PACKAGE@-@VERSION@/Schemos/ActiveLP_odd.gif"
+
+//                          Circuit Diagrams: Passive Filters
+
+#define LPF_CIN_PIC "@prefix@/@PACKAGE@-@VERSION@/Schemos/PassiveLP_Cin.gif"
+#define LPF_LIN_PIC "@prefix@/@PACKAGE@-@VERSION@/Schemos/PassiveLP_Lin.gif"
+#define HPF_CIN_PIC "@prefix@/@PACKAGE@-@VERSION@/Schemos/PassiveHP_Cin.gif"
+#define HPF_LIN_PIC "@prefix@/@PACKAGE@-@VERSION@/Schemos/PassiveHP_Lin.gif"
+
+//                          Circuit Diagrams: Bandpass Filters
+
+#define PTC_PIC       "@prefix@/@PACKAGE@-@VERSION@/Schemos/PassiveBPF-1.gif"
+#define PTLC_PIC      "@prefix@/@PACKAGE@-@VERSION@/Schemos/PassiveBPF-2.gif"
+#define STC_PIC       "@prefix@/@PACKAGE@-@VERSION@/Schemos/PassiveBPF-3.gif"
+#define STLC_PIC      "@prefix@/@PACKAGE@-@VERSION@/Schemos/PassiveBPF-4.gif"
+#define MULTI_FB_PIC  "@prefix@/@PACKAGE@-@VERSION@/Schemos/Multi-FB.gif"
+#define STATE_VAR_PIC "@prefix@/@PACKAGE@-@VERSION@/Schemos/StateVar.gif"
+
+//                                Support Files
+
+#define INTROSCREEN   "@prefix@/@PACKAGE@-@VERSION@/etc/Welcome.gif"
+#define IMAGE_DIR     "@prefix@/@PACKAGE@-@VERSION@/Schemos/"
+#define ETC_DIR       "@prefix@/@PACKAGE@-@VERSION@/etc/"
+#define BROWSER_PATHS "@prefix@/@PACKAGE@-@VERSION@/etc/browserpaths.cfg"
+#define DOCPATH       " @prefix@/@PACKAGE@-@VERSION@/Documents/index.html"
+
+#endif
+
+//------------------------------- locations.h  ---------------------------------
