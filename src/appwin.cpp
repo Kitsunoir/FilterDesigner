@@ -38,9 +38,9 @@
 FXDEFMAP(AppWin) CallBacks[]=
 {
     FXMAPFUNCS(SEL_UPDATE,  AppWin::ID_NEW,     AppWin::ID_AFLTR,     AppWin::UpdateMainMenu),
-    FXMAPFUNCS(SEL_UPDATE,  AppWin::ID_BP_PTC,  AppWin::ID_ACTIVE_HP, AppWin::UpdateOptions),
-    FXMAPFUNCS(SEL_UPDATE,  AppWin::ID_FLTR_R,  AppWin::ID_RIPPLE,    AppWin::UpdateLineEdit),
-    FXMAPFUNCS(SEL_UPDATE,  AppWin::ID_BUTTER,  AppWin::ID_TIME,      AppWin::UpdateRadioBtn),
+    FXMAPFUNCS(SEL_UPDATE,  AppWin::ID_BP_PTC,  AppWin::ID_INV_CHEV,  AppWin::UpdateOptions),
+    FXMAPFUNCS(SEL_UPDATE,  AppWin::ID_UPPER,   AppWin::ID_RIPPLE,    AppWin::UpdateLineEdit),
+    FXMAPFUNCS(SEL_UPDATE,  AppWin::ID_DECIBEL, AppWin::ID_TIME,      AppWin::UpdateRadioBtn),
     FXMAPFUNCS(SEL_UPDATE,  AppWin::ID_OK,      AppWin::ID_CLR_FLTR,  AppWin::UpdateCmdBtn),
     FXMAPFUNCS(SEL_COMMAND, AppWin::ID_NEW,     AppWin::ID_DOLPHINS,  AppWin::ClickMenuItm),
     FXMAPFUNCS(SEL_COMMAND, AppWin::ID_BP_PTC,  AppWin::ID_ACTIVE_HP, AppWin::ClickOptItm),
@@ -187,8 +187,9 @@ TxtResults(0)
     ImgViewLO=  new FXHorizontalFrame(MainPanel, LAYOUT_FILL|FRAME_NORMAL);
     MainDisp=   new FXImageView(ImgViewLO, NULL, NULL, 0, IMAGEVIEW_NORMAL|LAYOUT_FILL);
     CmdBtnBar=  new FXHorizontalFrame(MainLO, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|FRAME_NORMAL);
-    OKCmdBtn=   new FXButton(CmdBtnBar, "&OK", OKChkIco, this, ID_OK, BUTTON_NORMAL|ICON_BEFORE_TEXT);
-    ClrCmdBtn=  new FXButton(CmdBtnBar, "C&lear", ClrIco, this, ID_CLR, BUTTON_NORMAL|ICON_BEFORE_TEXT);
+    DesCmdBtn=  new FXButton(CmdBtnBar, "&Design", OKChkIco, this, ID_DESIGN, BUTTON_NORMAL|ICON_BEFORE_TEXT);
+    ClrCmdBtn=  new FXButton(CmdBtnBar, "&Clear", ClrIco, this, ID_CLR, BUTTON_NORMAL|ICON_BEFORE_TEXT);
+    OKCmdBtn=   new FXButton(CmfBtnBar, "&OK", OKChkIco, this, ID_OK, BUTTON_NORMAL|ICON_BEFORE_TEXT);
     ExitCmdBtn= new FXButton(CmdBtnBar, "&Exit", ExitIco, this, ID_EXIT, BUTTON_NORMAL|ICON_BEFORE_TEXT|LAYOUT_RIGHT);
 
 //                                 Set Up
@@ -266,54 +267,65 @@ TxtResults(0)
 
 //                       Highpass/Lowpass Filter Designer Pane
 
-    FXSplitter      *SubLO4;
-    FXVerticalFrame *SubLO5, *SubLO6;
-    FXGroupBox      *CharGB, *ImpGB;
-    FXMatrix        *Grid2, *Grid3, *Grid4;
+    FXSplitter        *LPFmain;
+    FXVerticalFrame   *LPFMain, *LPFlay1, *LPFlay2;
+    FXHorizontalFrame *LPFlay3, LPFlay4, *LPFcmdbtn;
+    FXGroupBox        *SpecGB, *MagGB, *OptGB, *ImplGB;
+    FXMatrix          *LPFGrid1, *LPFGrid2;
 
-    FltrPop= new FXPopup(this);
+    Topl= new FXPopup(this);
+          new FXOption(Topl, "Lowpass", NULL, this, ID_LOWPASS, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
+          new FXOption(Topl, "Highpass", NULL, this, ID_HIGHPASS, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
+          new FXOption(Topl, "C_in", NULL, this, ID_CIN, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
+          new FXOption(Topl, "L_in", NULL, this, ID_LIN, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
+          new FXOption(Topl, "Active", NULL, this, ID_ACTIVE, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
 
-    new FXOption(FltrPop, "Active LPF", NULL, this, ID_ACTIVE_LP, JUSTIFY_RIGHT|ICON_BEFORE_TEXT);
-    new FXOption(FltrPop, "Active HPF", NULL, this, ID_ACTIVE_HP, JUSTIFY_RIGHT|ICON_BEFORE_TEXT);
-    new FXOption(FltrPop, "Passive LP: Cin", NULL, this, ID_LP_CIN, JUSTIFY_RIGHT|ICON_BEFORE_TEXT);
-    new FXOption(FltrPop, "Passive LP: Lin", NULL, this, ID_LP_LIN, JUSTIFY_RIGHT|ICON_BEFORE_TEXT);
-    new FXOption(FltrPop, "Passive HP: Cin", NULL, this, ID_HP_CIN, JUSTIFY_RIGHT|ICON_BEFORE_TEXT);
-    new FXOption(FltrPop, "Passive HP: Lin", NULL, this, ID_HP_LIN, JUSTIFY_RIGHT|ICON_BEFORE_TEXT);
+    LPFchar= new FXPopup(this);
+             new FXOption(LPFchar, "Butterworth", NULL, this, ID_BUTTERWORTH, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
+             new FXOption(LPFchar, "Bessel", NULL, this, ID_BESSEL, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
+             new FXOption(LPFchar, "Chebychev", NULL, this, ID_CHEV, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
+	     new FXOption(LPFchar, "Inv Chebychev", NULL, this, ID_INV_CHEV, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
 
-    SubLO4= new FXSplitter(MainPanel, SPLITTER_HORIZONTAL|SPLITTER_TRACKING|LAYOUT_FILL|FRAME_NORMAL);
-    SubLO5= new FXVerticalFrame(SubLO4, LAYOUT_FILL|LAYOUT_CENTER_Y|FRAME_NORMAL);
-    Grid2=  new FXMatrix(SubLO5, 3, MATRIX_BY_ROWS);
-            new FXLabel(Grid2, "Topology", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
-	    new FXLabel(Grid2, "Order", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
-	    new FXLabel(Grid2, "Fc (Hz, KHz, MHz)", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+    LPGMain=  new FXVerticalFrame(MainPanel, FRAME_NORMAL|LAYOUT_FILL);
+    LPFmain=  new FXSplitter(MainPanel, SPLITTER_HORIZONTAL+SPLITTER_TRACKING|LAUOUT_FILL|FRAME_NORMAL);
+    LPFPanel= new FXSwitcher(LPFmain, SWITCHER_VCOLAPSE|LAYOUT_FILL|FRAME_NONE);
+    LPFlay1=  new FXVerticalFrame(LPFPanel, LAYOUT_FILL|FRAME_NORMAL);
+    SpecGB=   new FXGroupBox(LPFlay1, "Specs", GROUPBOX_TITLE_CENTER|FRAME_GROOVE|LAYOUT_CENTER_X|LAYOUT_CENTER_Y|LAYOUT_FILL);
 
-    FltrOpt=     new FXOptionMenu(Grid2, FltrPop, FRAME_RAISED|FRAME_THICK|JUSTIFY_HZ_APART|ICON_BEFORE_TEXT|LAYOUT_CENTER_X);
-    OrderSB=     new FXSpinner(Grid2, 10, this, ID_ORDER, SPIN_CYCLIC|FRAME_NORMAL|LAYOUT_CENTER_X);
-    UsrEntry[5]= new FXTextField(Grid2, 16, this, ID_CORNER, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
-    CharGB=      new FXGroupBox(SubLO5, "Characteristics", GROUPBOX_TITLE_CENTER|FRAME_GROOVE);
-                 new FXRadioButton(CharGB, "Butterworth", this, ID_BUTTER);
-                 new FXRadioButton(CharGB, "Chebychev", this, ID_CHEBYCHEV);
-                 new FXRadioButton(CharGB, "Bessel", this, ID_BESSEL);
-                 new FXRadioButton(CharGB, "Frequency", this, ID_FREQ);
-                 new FXRadioButton(CharGB, "Time", this, ID_TIME);
-                 new FXRadioButton(CharGB, "R_l/R_src INF", this, ID_RL_INF);
-    Grid4=       new FXMatrix(CharGB, 1, MATRIX_BY_ROWS);
-                 new FXLabel(Grid4, "PB Ripple (db)", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
-    UsrEntry[6]= new FXTextField(Grid4, 16, this, ID_RIPPLE, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
-    ImpGB=       new FXGroupBox(SubLO5, "Impedance", GROUPBOX_TITLE_CENTER|FRAME_GROOVE);
-    Grid3=       new FXMatrix(ImpGB, 1, MATRIX_BY_ROWS);
-    RValueLbl=   new FXLabel(Grid3, "", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
-    UsrEntry[7]= new FXTextField(Grid3, 16, this, ID_FLTR_RL, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
+    LPFGrid1= new FXMatrix(SpecGB, 6, MATRIX_BY_ROWS);
+              new FXLabel(LPFGrid1, "Characteristic", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+              new FXLabel(LPFGrid1, "F_pass", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+              new FXlabel(LPFGrid1, "F_stop", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+              new FXLabel(LPFGrid1, "Attenuation_pass", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+              new FXLabel(LPFGrid1, "Attenuation_stop", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+              new FXLabel(LPFGrid1, "Ripple (db)", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+    LPFCharOM=   new FXOptionMenu(LPFGrid1, LPFchar, FRAME_RAISED|FRAME_THICK|JUSTFY_HZ_APART|ICON_BEFORE_TEXT);
+    UsrEntry[5]= new FXTextField(LPFGrid1, 16, this, ID_PB_FREQ, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
+    UsrEntry[6]= new FXTextField(LPFGrid1, 16, this, ID_SB_FREQ, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
+    UsrEntry[7]= new FXTextField(LPFGrid1, 16, this, ID_ATTN_PASS, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
+    UsrEntry[8]= new FXTexrGield(LPFGrid1, 16, this, ID_ATTN_STOP, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
+    UsrEntry[8]= new FXTextField(LPFGrid1, 16, this, ID_RIPPLE, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
 
-    SubLO6=   new FXVerticalFrame(SubLO4, LAYOUT_FILL|FRAME_NORMAL);
-    FltrDesc= new FXText(SubLO6, NULL, 0, TEXT_READONLY|TEXT_WORDWRAP|LAYOUT_FILL|FRAME_NONE);
+    ImplGB=   new FXGroupBox(LPFPanel, "Implementation", GROUPBOX_TITLE_CENTER|FRAME_GROOVE|LAYOUT_CENTER_X|LAYOUT_CENTER_Y|LAYOUT_FILL);
+    LPFGrid2= new FXMatrix(ImplGB, 3, MATRIX_BY_ROWS);
+              new FXLabel(LPFGrid2, "Topology", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+              new FXLabel(LPFGrid2, "R_i/o", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+    RtrialLbl=    new FXLabel(LPFGrid2, "", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+    LPGTopOM=     new FXOptionMenu(LPFGrid2, Topl, FRAME_RAISED|FRAME_THICK|JUSTFY_HZ_APART|ICON_BEFORE_TEXT);
+    UsrEntry[9]=  new FXTextField(LPFGrid2, 16, this, ID_R, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
+    UsrEntry[10]= new FXTextField(LPFGrid2, 16, this, ID_RTRIAL, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
 
-    OrderSB->setRange(2, MAXORDER);
-    FltrDesc->setMarginTop(10);
-    FltrDesc->setMarginBottom(10);
-    FltrDesc->setMarginLeft(20);
-    FltrDesc->setMarginRight(20);
-    FltrDesc->setTabColumns(7);
+    LPFlay2=     new FXVerticalFrame(LPFMain, LAYOUT_FILL|FRAME_NORMAL);
+    LPFDataView= new FXImageFrame(LPGlay2, NULL, FRAME_NORMAL|LAYOUT_CENTER_X|LAYOUT_FILL);
+    LPFlay3=     new FXHorizontalFrame(LPFlay2, LAYOUT_FILL|LAYOUT_CENTER_X|LAYOUT_CENTER_Y);
+    MagGB=       new FXGroupBox(LPGlay3, "Magnitude", GROUPBOX_TITLE_CENTER|LAYOUT_CENTER_Y|FRAME_GROOVE|LAYOUT_FILL);
+                 new FXRadioButton(MagFB, "db_v", this, ID_DECIBEL);
+                 new FXRadioButton(MagGB, "Linear", this, ID_LINEAR);
+
+    OptGB= new FXGroupBox(LPFlay3, "Optimixations", GROUPBOX_TITLE_CENTER|FRAME_GROOVE|LAYOUT_CENTER_Y|LAYOUT_FILL);
+           new FXRadioButton(OptGB, "Freq", this, ID_FREQ);
+           new FXRadioButton(OptGB, "Time", this, ID_TIME);
+
 }
 
 //------------------------------------------------------------------------------

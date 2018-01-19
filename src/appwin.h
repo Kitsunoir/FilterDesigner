@@ -134,19 +134,20 @@ class AppWin : public FXMainWindow
 	    ID_BP_STLC,
 	    ID_MULTIFB,
 	    ID_STATEVAR,
-	    ID_LP_CIN,
-	    ID_LP_LIN,
-	    ID_HP_CIN,
-	    ID_HP_LIN,
-	    ID_ACTIVE_LP,
-	    ID_ACTIVE_HP,
+	    ID_LOWPASS,
+	    ID_HIGHPASS,
+	    ID_CIN,
+	    ID_LIN,
+	    ID_ACTIVE,
+	    ID_BUTTERWORTH,
+	    ID_BESSEL,
+	    ID_CHEV,
+	    ID_INV_CHEV,
 
 //              Radio Btn IDs
 
-	    ID_BUTTER,
-	    ID_CHEBYCHEV,
-	    ID_BESSEL,
-	    ID_RL_INF,
+	    ID_DECIBEL,
+	    ID_LINEAR,
 	    ID_FREQ,
 	    ID_TIME,
 
@@ -154,6 +155,7 @@ class AppWin : public FXMainWindow
 
 	    ID_OK,
 	    ID_CLR,
+	    ID_DESIGN,
 	    ID_OK_PBPF,
 	    ID_OK_ABPF,
 	    ID_OK_PFLTR,
@@ -163,14 +165,15 @@ class AppWin : public FXMainWindow
 
 //              Text Field IDs
 
+	    ID_UPPER,
+	    ID_LOWER,
 	    ID_FLTR_R,
-	    ID_FLTR_RL,
 	    ID_GAIN,
 	    ID_C_TRIAL,
-	    ID_LOWER,
-	    ID_UPPER,
-	    ID_ORDER,
-	    ID_CORNER,
+	    ID_PB_FREQ,
+	    ID_SB_FREQ,
+	    ID_ATTN_PASS,
+	    ID_ATTN_STOP,
 	    ID_RIPPLE,
 
 	    ID_TITLE,
@@ -182,6 +185,12 @@ class AppWin : public FXMainWindow
             MAIN_PANE= FXSwitcher::ID_OPEN_FIRST,
 	    BPF_PANE,
             FLTR_PANE
+	};
+
+	enum
+	{
+	    CHAR_PANE,
+	    IMPL_PANE
 	};
 
         enum
@@ -197,15 +206,16 @@ class AppWin : public FXMainWindow
             SAVED
 	};
 
-        FXSwitcher     *MainPanel;
+        FXSwitcher     *MainPanel, *LPFPanel;
         FXImageView    *MainDisp, *SchemosLbl;
+	FXImageFrame   *LPFDataView;
         FXButton       *OKCmdBtn, *XnlCmdBtn, *ClrCmdBtn, *ExitCmdBtn;
         FXSpinner      *OrderSB;
-        FXLabel        *StatusLbl, *RValueLbl;
-        FXTextField    *UsrEntry[8];
+        FXLabel        *StatusLbl, *RtrialLbl;
+        FXTextField    *UsrEntry[11];
 
-        FXPopup        *TplPop, *FltrPop;
-        FXOptionMenu   *TplOpt, *FltrOpt;
+        FXPopup        *TplPop, *FltrPop, *Topl, *LPFchar;
+        FXOptionMenu   *TplOpt, *FltrOpt, *LPFcharOM, *LPGTopOM;
         FXText         *BPFDesc, *FltrDesc;
         FXStatusBar    *MainSB;
 	FXToolBarShell *MenuSh, *ToolSh;
