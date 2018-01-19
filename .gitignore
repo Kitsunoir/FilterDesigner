@@ -1,10 +1,11 @@
 #  Git ignore files
 #  Ignore all object files
-#  Makefile.in's
+#  Makefile's
 #  Files created by configure
 
 Makefile
 config.log
 config.status
+github-url.txt
 *.o
 *~
