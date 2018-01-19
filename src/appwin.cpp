@@ -87,6 +87,7 @@ TxtResults(0)
     ClrIco=        new FXGIFIcon(ThisApp, clear_up_gif);
     OKChkIco=      new FXGIFIcon(ThisApp, OKCheck_gif);
     ExitIco=       new FXGIFIcon(ThisApp, Exit_gif);
+    GearsIco=      new FXGIFIcon(ThisApp, gears_gif);
     BPFPTCIco=     new FXGIFIcon(ThisApp, PT_BPF_gif, 0, IMAGE_KEEP|IMAGE_SHMI|IMAGE_SHMP);
     BPFPTLCIco=    new FXGIFIcon(ThisApp, PTLC_BPF_gif, 0, IMAGE_KEEP|IMAGE_SHMI|IMAGE_SHMP);
     BPFSTCIco=     new FXGIFIcon(ThisApp, ST_BPF_gif, 0, IMAGE_KEEP|IMAGE_SHMI|IMAGE_SHMP);
@@ -187,7 +188,7 @@ TxtResults(0)
     ImgViewLO=  new FXHorizontalFrame(MainPanel, LAYOUT_FILL|FRAME_NORMAL);
     MainDisp=   new FXImageView(ImgViewLO, NULL, NULL, 0, IMAGEVIEW_NORMAL|LAYOUT_FILL);
     CmdBtnBar=  new FXHorizontalFrame(MainLO, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|FRAME_NORMAL);
-    DesCmdBtn=  new FXButton(CmdBtnBar, "&Design", OKChkIco, this, ID_DESIGN, BUTTON_NORMAL|ICON_BEFORE_TEXT);
+    DesCmdBtn=  new FXButton(CmdBtnBar, "&Design", GearsIco, this, ID_DESIGN, BUTTON_NORMAL|ICON_BEFORE_TEXT);
     ClrCmdBtn=  new FXButton(CmdBtnBar, "&Clear", ClrIco, this, ID_CLR, BUTTON_NORMAL|ICON_BEFORE_TEXT);
     OKCmdBtn=   new FXButton(CmfBtnBar, "&OK", OKChkIco, this, ID_OK, BUTTON_NORMAL|ICON_BEFORE_TEXT);
     ExitCmdBtn= new FXButton(CmdBtnBar, "&Exit", ExitIco, this, ID_EXIT, BUTTON_NORMAL|ICON_BEFORE_TEXT|LAYOUT_RIGHT);
@@ -934,7 +935,7 @@ long AppWin::UpdateLineEdit(FXObject *Sender, FXSelector CallerID, void*)
 	                                Sender->handle(this, FXSEL(SEL_COMMAND, DISABLE), 0);
 	  break;
 
-        case ID_C_TRIAL:
+        case ID_RTRIAL:
 
           (FilterClassID == ACTIVE) ? Sender->handle(this, FXSEL(SEL_COMMAND, ENABLE), 0) :
 	                              Sender->handle(this, FXSEL(SEL_COMMAND, DISABLE), 0);
@@ -946,7 +947,7 @@ long AppWin::UpdateLineEdit(FXObject *Sender, FXSelector CallerID, void*)
 	                                Sender->handle(this, FXSEL(SEL_COMMAND, DISABLE), 0);
 	  break;
 
-        case ID_FLTR_R:
+        case ID_R:
 
 	  (FilterClassID == PASSIVE) ? Sender->handle(this, FXSEL(SEL_COMMAND, ENABLE), 0) :
 	                               Sender->handle(this, FXSEL(SEL_COMMAND, DISABLE), 0);
@@ -966,18 +967,6 @@ long AppWin::UpdateRadioBtn(FXObject *Sender, FXSelector CallerID, void*)
 
     switch (FXSELID(CallerID))
     {
-      case ID_BUTTER:
-
-	(FilterCharID == BUTTERWORTH) ? Current->setCheck(TRUE) : Current->setCheck(FALSE); break;
-
-      case ID_CHEBYCHEV:
-
-	(FilterCharID == CHEBYCHEV) ? Current->setCheck(TRUE) : Current->setCheck(FALSE); break;
-
-      case ID_BESSEL:
-
-	(FilterCharID == BESSEL) ? Current->setCheck(TRUE) : Current->setCheck(FALSE); break;
-
       case ID_TIME:
 
 	if (FilterCharID == BESSEL)
@@ -1010,19 +999,15 @@ long AppWin::UpdateRadioBtn(FXObject *Sender, FXSelector CallerID, void*)
 	(BesselOpt == FREQ) ? Current->setCheck(TRUE) : Current->setCheck(FALSE);
 	break;
 
-      case ID_RL_INF:
+      case ID_DECIBEL:
+       
+        (Dimensions == DECIBEL) ? Current->setCheck(TRUE) : Current->setCheck(FALSE);
+        break;
 
-	if (FilterClassID == ACTIVE)
-	{
-	    Current->handle(this, FXSEL(SEL_COMMAND, DISABLE), 0);
-	    Current->setCheck(FALSE);
-	}
-	else
-	{
-	  Current->handle(this, FXSEL(SEL_COMMAND, ENABLE), 0);
-	  (RLinf) ? Current->setCheck(TRUE) : Current->setCheck(FALSE);
-	}
-	break;
+      case ID_LINEAR:
+	
+        (Dimensions == LINEAR) ? Current->setCheck(TRUE) : Current->setCheck(FALSE);
+        break;
     }
 
   return 1;

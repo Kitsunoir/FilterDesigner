@@ -36,3 +36,5 @@ extern const unsigned char filesaveas_gif[];
 
 extern const unsigned char help_gif[];
 
+extern const unsigned char gears_gif[];
+
