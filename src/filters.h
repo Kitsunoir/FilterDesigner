@@ -42,7 +42,7 @@ namespace Filters
   void LPActiveBW(const FXint aOrd, const FXint aSec, FXdouble *C_1, FXdouble *C_2);
   void LPActiveChev(const FXint aOrd, const FXint aSec, FXdouble aRfac, FXdouble *C_1, FXdouble *C_2);
   FXuint LPActiveBes(const FXint aOrd, FXdouble *C_1, FXdouble *C_2, const FXuint aOptID=FREQ);
-  void LPPassiveBW(const FXint aOrd, FXdouble *aLCVals, FXuint aRinf);
+  void LPPassiveBW(const FXint aOrd, FXdouble *aLCVals, const FXuint aRinf);
   void LPPassiveChev(const FXint aOrd, FXdouble aPBR, FXdouble *aLCVals, const FXuint aRinf);
   void LPPassiveBes(const FXint aOrd, FXdouble *aLCVals, const FXuint aOptID, const FXuint aRinf);
   FXuint GetPoles(const FXString&, FXdouble*, FXdouble*);

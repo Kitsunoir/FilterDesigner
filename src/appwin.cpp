@@ -29,6 +29,7 @@
 #include "appwin.h"
 #include "bandpass.h"
 #include "filters.h"
+#include "datadict.h"
 #include "messages.h"
 #include "about.h"
 #include "splmsgbox.h"
@@ -70,6 +71,7 @@ ProjState(PROJ_NONE),
 BesselOpt(NOOPT),
 SaveState(SAVED),
 RLinf(0),
+Dimensions(DECIBEL),
 ProjSchemos(0),
 Welcome(0),
 TxtResults(0)
@@ -218,11 +220,13 @@ TxtResults(0)
       Cntx.drawText(200, 345, "(Image display area)");
     }
 
+    ProjData= new DataDict;
+
 //                              Create Bandpass Filter Designer Pane
 
     FXSplitter        *SubLO1;
     FXVerticalFrame   *SubLO2, *SubLO3;
-    FXHorizontalFrame *DispLO, *SchemosLO;
+    FXHorizontalFrame *DispLO;
     FXGroupBox        *DataGB;
     FXMatrix          *Grid1;
 
@@ -232,8 +236,10 @@ TxtResults(0)
     new FXOption(TplPop, "Parallel 2", NULL, this, ID_BP_PTLC, JUSTIFY_RIGHT|ICON_BEFORE_TEXT);
     new FXOption(TplPop, "Series 1", NULL, this, ID_BP_STC, JUSTIFY_RIGHT|ICON_BEFORE_TEXT);
     new FXOption(TplPop, "Series 2", NULL, this, ID_BP_STLC, JUSTIFY_RIGHT|ICON_BEFORE_TEXT);
+    new FXOption(TplPop, "Passive Notch", NULL, this, ID_PNOTCH, JUSRIFY_RIGHT|ICON_BEFORE_TEXT);
     new FXOption(TplPop, "Multi-FB", NULL, this, ID_MULTIFB, JUSTIFY_RIGHT|ICON_BEFORE_TEXT);
     new FXOption(TplPop, "State Var", NULL, this, ID_STATEVAR, JUSTIFY_RIGHT|ICON_BEFORE_TEXT);
+    new DXOption(TplPop, "Active Notch", NULL, this, ID_ANOTCH, JUSTIFY_RGHT|ICON_BEFORE_TEXT);
 
     SubLO1=  new FXSplitter(MainPanel, SPLITTER_HORIZONTAL|SPLITTER_TRACKING|LAYOUT_FILL|FRAME_NORMAL);
     SubLO2=  new FXVerticalFrame(SubLO1, LAYOUT_FILL|FRAME_NORMAL);
@@ -254,8 +260,7 @@ TxtResults(0)
     UsrEntry[4]= new FXTextField(Grid1, 16, this, ID_C_TRIAL, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
 
     SubLO3=     new FXVerticalFrame(SubLO1, LAYOUT_FILL|FRAME_NORMAL);
-    SchemosLO=  new FXHorizontalFrame(SubLO3, LAYOUT_FILL|FRAME_NORMAL);
-    SchemosLbl= new FXImageView(SchemosLO, NULL, NULL, 0, IMAGEVIEW_NORMAL|LAYOUT_FILL);
+    SchemosLbl= new FXImageFrame(SubLO3, NULL, FRAME_NORMAL|LAYOUT_CENTER_X|LAYOUT_FILL);
     DispLO=     new FXHorizontalFrame(SubLO3, LAYOUT_FILL|LAYOUT_CENTER|FRAME_NORMAL);
     BPFDesc=    new FXText(DispLO, NULL, 0, TEXT_READONLY|TEXT_WORDWRAP|LAYOUT_FILL|FRAME_NONE);
 
@@ -266,7 +271,7 @@ TxtResults(0)
     BPFDesc->setTabColumns(7);
     BPFDesc->setText("Select topology to begin");
 
-//                       Highpass/Lowpass Filter Designer Pane
+//                                  Highpass/Lowpass Filter Designer Pane
 
     FXSplitter        *LPFmain;
     FXVerticalFrame   *LPFMain, *LPFlay1, *LPFlay2;
@@ -279,8 +284,7 @@ TxtResults(0)
           new FXOption(Topl, "Highpass", NULL, this, ID_HIGHPASS, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
           new FXOption(Topl, "C_in", NULL, this, ID_CIN, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
           new FXOption(Topl, "L_in", NULL, this, ID_LIN, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
-          new FXOption(Topl, "Active", NULL, this, ID_ACTIVE, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
-
+	  
     LPFchar= new FXPopup(this);
              new FXOption(LPFchar, "Butterworth", NULL, this, ID_BUTTERWORTH, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
              new FXOption(LPFchar, "Bessel", NULL, this, ID_BESSEL, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
@@ -288,45 +292,51 @@ TxtResults(0)
 	     new FXOption(LPFchar, "Inv Chebychev", NULL, this, ID_INV_CHEV, JUSTFY_RIGHT|ICON_BEFORE_TEXT);
 
     LPGMain=  new FXVerticalFrame(MainPanel, FRAME_NORMAL|LAYOUT_FILL);
-    LPFmain=  new FXSplitter(MainPanel, SPLITTER_HORIZONTAL+SPLITTER_TRACKING|LAUOUT_FILL|FRAME_NORMAL);
-    LPFPanel= new FXSwitcher(LPFmain, SWITCHER_VCOLAPSE|LAYOUT_FILL|FRAME_NONE);
+    LPFmain=  new FXSplitter(MainPanel, SPLITTER_HORIZONTAL|SPLITTER_TRACKING|LAYOUT_FILL|FRAME_NORMAL);
+    LPFPanel= new FXSwitcher(LPFmain, SWITCHER_VCOLLAPSE|LAYOUT_FILL|FRAME_NONE);
     LPFlay1=  new FXVerticalFrame(LPFPanel, LAYOUT_FILL|FRAME_NORMAL);
     SpecGB=   new FXGroupBox(LPFlay1, "Specs", GROUPBOX_TITLE_CENTER|FRAME_GROOVE|LAYOUT_CENTER_X|LAYOUT_CENTER_Y|LAYOUT_FILL);
-
-    LPFGrid1= new FXMatrix(SpecGB, 6, MATRIX_BY_ROWS);
+    LPFGrid1= new FXMatrix(SpecGB, 8, MATRIX_BY_ROWS);
               new FXLabel(LPFGrid1, "Characteristic", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
-              new FXLabel(LPFGrid1, "F_pass", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
-              new FXlabel(LPFGrid1, "F_stop", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+              new FXLabel(LPFGrid1, "F_pass (Hz, KHz, MHz)", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+              new FXlabel(LPFGrid1, "F_stop (Hz, KHz, MHz)", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
               new FXLabel(LPFGrid1, "Attenuation_pass", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
               new FXLabel(LPFGrid1, "Attenuation_stop", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
-              new FXLabel(LPFGrid1, "Ripple (db)", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+              new FXLabel(LPFGrid1, "Ripple", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+	      new FXLabel(LPFGrid1, "Cutoff Freq (Hz, KHz, MHz)" NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+	      new FXLabel(LPFGrid1, "Order", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
     LPFCharOM=   new FXOptionMenu(LPFGrid1, LPFchar, FRAME_RAISED|FRAME_THICK|JUSTFY_HZ_APART|ICON_BEFORE_TEXT);
     UsrEntry[5]= new FXTextField(LPFGrid1, 16, this, ID_PB_FREQ, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
     UsrEntry[6]= new FXTextField(LPFGrid1, 16, this, ID_SB_FREQ, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
     UsrEntry[7]= new FXTextField(LPFGrid1, 16, this, ID_ATTN_PASS, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
-    UsrEntry[8]= new FXTexrGield(LPFGrid1, 16, this, ID_ATTN_STOP, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
+    UsrEntry[8]= new FXTexrField(LPFGrid1, 16, this, ID_ATTN_STOP, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
     UsrEntry[8]= new FXTextField(LPFGrid1, 16, this, ID_RIPPLE, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
+    UsrEntry[9]= new FXTextField(LPFGrid1, 16, this, ID_CUTOFF, TEXTDIELD_LIMITED|TEXTFIELD_NORMAL);
+    OrderSB=     new FXSpinner(LPFGrid1, 16, this, ID_ORDER_SPIN, SPIN_CYCLIC);
 
     ImplGB=   new FXGroupBox(LPFPanel, "Implementation", GROUPBOX_TITLE_CENTER|FRAME_GROOVE|LAYOUT_CENTER_X|LAYOUT_CENTER_Y|LAYOUT_FILL);
     LPFGrid2= new FXMatrix(ImplGB, 3, MATRIX_BY_ROWS);
               new FXLabel(LPFGrid2, "Topology", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
-              new FXLabel(LPFGrid2, "R_i/o", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
+              new FXLabel(LPFGrid2, "R_i/o (R, K, MEG)", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
     RtrialLbl=    new FXLabel(LPFGrid2, "", NULL, ICON_BEFORE_TEXT|JUSTIFY_RIGHT);
     LPGTopOM=     new FXOptionMenu(LPFGrid2, Topl, FRAME_RAISED|FRAME_THICK|JUSTFY_HZ_APART|ICON_BEFORE_TEXT);
-    UsrEntry[9]=  new FXTextField(LPFGrid2, 16, this, ID_R, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
-    UsrEntry[10]= new FXTextField(LPFGrid2, 16, this, ID_RTRIAL, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
+    LPFlay4=      new FXHorizontalFrame(LPFGrid2, LAYOUT_FILL_X|LAYOUT_RIGHT);
+    UsrEntry[10]= new FXTextField(LPFlay4, 16, this, ID_R, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
+                  new FXCheckButton(LPFlay4, "Check for R_l= INF", this, ID_CHECK_INF);
+    UsrEntry[11]= new FXTextField(LPFGrid2, 16, this, ID_RTRIAL, TEXTFIELD_LIMITED|TEXTFIELD_NORMAL);
 
     LPFlay2=     new FXVerticalFrame(LPFMain, LAYOUT_FILL|FRAME_NORMAL);
-    LPFDataView= new FXImageFrame(LPGlay2, NULL, FRAME_NORMAL|LAYOUT_CENTER_X|LAYOUT_FILL);
+    DataView=    new FXCanvas(LPFlay2, NULL, 0, LAYOUT_FILL|FRAME_NORMAL|LAYOUT_CENTER_X|LAYOUT_CENTER_Y|LAYOUT_FILL);
     LPFlay3=     new FXHorizontalFrame(LPFlay2, LAYOUT_FILL|LAYOUT_CENTER_X|LAYOUT_CENTER_Y);
     MagGB=       new FXGroupBox(LPGlay3, "Magnitude", GROUPBOX_TITLE_CENTER|LAYOUT_CENTER_Y|FRAME_GROOVE|LAYOUT_FILL);
                  new FXRadioButton(MagFB, "db_v", this, ID_DECIBEL);
                  new FXRadioButton(MagGB, "Linear", this, ID_LINEAR);
 
-    OptGB= new FXGroupBox(LPFlay3, "Optimixations", GROUPBOX_TITLE_CENTER|FRAME_GROOVE|LAYOUT_CENTER_Y|LAYOUT_FILL);
+    OptGB= new FXGroupBox(LPFlay3, "Optimizations", GROUPBOX_TITLE_CENTER|FRAME_GROOVE|LAYOUT_CENTER_Y|LAYOUT_FILL);
            new FXRadioButton(OptGB, "Freq", this, ID_FREQ);
            new FXRadioButton(OptGB, "Time", this, ID_TIME);
-
+    OrderSB->setRange(2, MAXORDER);
+    OrderSB->setIncrement(1);
 }
 
 //------------------------------------------------------------------------------
@@ -411,20 +421,25 @@ long AppWin::ClickMenuItm(FXObject*, FXSelector CallerID, void*)
 	  SaveState=     SAVED;
 	  BesselOpt=     NOOPT;
 	  Order=         0;
+	  Dimensions=    DECIBEL;
 	  BPFDesc->setText("");
 	  FltrDesc->setText("");
 	  RValueLbl->setText("");
 	  StatusLbl->setText("No project");
 	  StatusLbl->setIcon(LEDGrayIco);
+	  RtrialLbl->setText("");
 	  OrderSB->setRange(2, MAXORDER);
 	  OrderSB->setIncrement(1);
+	  OKCmdBtn->setSelector(OD_OK);
+	  CleCmdBtn->setSelector(ID_CLR);
           MainDisp->setImage(Welcome);
 	  MainPanel->handle(this, FXSEL(SEL_COMMAND, MAIN_PANE), 0);
+	  LPFPanel->handle(this, FXSEL(SEL_COMMAND, CHAR_PANE), 0);
 	  if (ProjSchemos) delete ProjSchemos;
 	  ProjSchemos= 0;
 	  if (TxtResults) TxtResults->clear();
 
-	  for (int i= 0; i < 8; i++) UsrEntry[i]->setText("");
+	  for (int i= 0; i < 13; i++) UsrEntry[i]->setText("");
 	  break;
 
         case ID_SAVE:
@@ -454,36 +469,40 @@ long AppWin::ClickMenuItm(FXObject*, FXSelector CallerID, void*)
         case ID_PBPF:
 
 	  FilterClassID= PASSIVE;
+	  ProjState= PROJ_PENDING;
 	  MainPanel->handle(this, FXSEL(SEL_COMMAND, BPF_PANE), 0);
-	  OKCmdBtn->setSelector(ID_OK_PBPF);
+	  OKCmdBtn->setSelector(ID_DES_PBPF);
 	  ClrCmdBtn->setSelector(ID_CLR_BPF);
 	  break;
 
         case ID_ABPF:
 
 	  FilterClassID= ACTIVE;
+  	  ProjState= PROJ_PENDING;
 	  MainPanel->handle(this, FXSEL(SEL_COMMAND, BPF_PANE), 0);
-	  OKCmdBtn->setSelector(ID_OK_ABPF);
+	  OKCmdBtn->setSelector(ID_DES_ABPF);
 	  ClrCmdBtn->setSelector(ID_CLR_BPF);
 	  break;
 
         case ID_PFLTR:
 
 	  FilterClassID= PASSIVE;
+	  ProjState= PROJ_PENDING;
 	  RValueLbl->setText("R_src/R_load (R, K, M)");
 	  FltrDesc->setText("\n\tSelect a passive filter topology");
 	  MainPanel->handle(this, FXSEL(SEL_COMMAND, FLTR_PANE), 0);
-	  OKCmdBtn->setSelector(ID_OK_PFLTR);
+	  OKCmdBtn->setSelector(ID_DES_PFLTR);
 	  ClrCmdBtn->setSelector(ID_CLR_FLTR);
 	  break;
 
         case ID_AFLTR:
 
 	  FilterClassID= ACTIVE;
+	  ProjState= PROJ_PENDING;
 	  RValueLbl->setText("Trial R (R, K, M)");
 	  FltrDesc->setText("\n\tSelect an active highpass or lowpass filter");
 	  MainPanel->handle(this, FXSEL(SEL_COMMAND, FLTR_PANE), 0);
-	  OKCmdBtn->setSelector(ID_OK_AFLTR);
+	  OKCmdBtn->setSelector(ID_DES_AFLTR);
 	  ClrCmdBtn->setSelector(ID_CLR_FLTR);
 	  break;
 
@@ -503,10 +522,9 @@ long AppWin::ClickCmdBtn(FXObject*, FXSelector CallerID, void*)
 {
     switch(FXSELID(CallerID))
     {
-        case ID_OK_PBPF:
+        case ID_DES_PBPF:
 	{
 	    FXdouble Fh, Fl, R;
-	    FXString DesignData;
 
 	    Fh= GetData(UsrEntry[0]);
 
@@ -547,15 +565,14 @@ long AppWin::ClickCmdBtn(FXObject*, FXSelector CallerID, void*)
 		return 1;
 	    }
 
-	    DesignData= PBPFDesigner(Fh, Fl, R, FilterTypeID);
-	    WriteOut(DesignData, FilterTypeID);
+	    PBPFDesigner(Fh, Fl, R, FilterTypeID);
+	    WriteOut(FilterTypeID);
 	}
 	break;
 
-        case ID_OK_ABPF:
+        case ID_DES_ABPF:
 	{
 	    FXdouble Fh, Fl, Ctrial;
-	    FXString DesignData;
 
 	    Fh= GetData(UsrEntry[0]);
 
@@ -593,16 +610,15 @@ long AppWin::ClickCmdBtn(FXObject*, FXSelector CallerID, void*)
 		return 1;
 	    }
 
-	    DesignData= ABPFDesigner(Fh, Fl, Ctrial, FilterTypeID);
-	    WriteOut(DesignData, FilterTypeID);
+	    ABPFDesigner(Fh, Fl, Ctrial, FilterTypeID);
+	    WriteOut(FilterTypeID);
 	}
 	break;
 
-        case ID_OK_PFLTR:
+        case ID_DES_PFLTR:
 	{
 	    FXdouble CutoffFreq, Rsrc, PBripple= 0;
 	    FXuint Order;
-	    FXString DesignData;
 
 	    Order=      OrderSB->getValue();
 	    CutoffFreq= GetData(UsrEntry[5]);
@@ -638,12 +654,13 @@ long AppWin::ClickCmdBtn(FXObject*, FXSelector CallerID, void*)
 
 	    FXdouble LCVals[Order];
 	    if (PassiveFltrDesigner(Order, PBripple, LCVals)) return 1;
-	    DesignData= ScalePassive(Order, CutoffFreq, PBripple, Rsrc, LCVals);
-	    WriteOut(DesignData, FilterTypeID);
+
+	    DataDict->insert("LCVals", LCVals);
+	    WriteOut(FilterTypeID);
 	}
 	break;
 
-        case ID_OK_AFLTR:
+        case ID_DES_AFLTR:
 	{
 	    FXdouble CutoffFreq, TrialR, PBripple= 0;
 	    FXuint Order;
@@ -686,8 +703,9 @@ long AppWin::ClickCmdBtn(FXObject*, FXSelector CallerID, void*)
 	    FXdouble C_one[Sections];
 	    FXdouble C_two[Sections];
 	    if (ActiveFltrDesigner(Order, PBripple, C_one, C_two)) return 1;
-	    DesignData= ScaleActive(Sections, CutoffFreq, PBripple, TrialR, C_one, C_two);
-	    (Order & 1) ? WriteOut(DesignData, FilterTypeID|1) : WriteOut(DesignData, FilterTypeID);
+	    DataDict->insert("C_one", C_one);
+	    DataDict->insert("C_two", C_two);
+	    WriteOut(FilterTypeID);
 	}
 	break;
 
@@ -703,12 +721,6 @@ long AppWin::ClickCmdBtn(FXObject*, FXSelector CallerID, void*)
 	  return 1;
 	  break;
     }
-
-    MainPanel->handle(this, FXSEL(SEL_COMMAND, MAIN_PANE), 0);
-    SaveState= NOT_SAVED;
-    ProjState= PROJ_COMP;
-    StatusLbl->setText("Project complete; not saved");
-    StatusLbl->setIcon(LEDOffIco);
 
     return 1;
 }
@@ -785,9 +797,15 @@ long AppWin::ClickOptItm(FXObject*, FXSelector CallerID, void*)
 	  FltrDesc->setText(HP_LIN_DESC);
 	  break;
 
-        case ID_ACTIVE_LP: FilterTypeID= ACTIVE_LPF; break;
+        case ID_ACTIVE_LP:
+	  FilterTypeID= ACTIVE_LPF;
+	  RtrialLbl->setText("Trial R (R, K, MEG)");
+	  break;
 
-        case ID_ACTIVE_HP: FilterTypeID= ACTIVE_HPF; break;
+        case ID_ACTIVE_HP:
+	  FilterTypeID= ACTIVE_HPF;
+	  RtrialLbl->setText("Trial C (uF, nF, pF)")
+	  break;
     }
 
     ProjState= PROJ_PEND;
@@ -798,7 +816,7 @@ long AppWin::ClickOptItm(FXObject*, FXSelector CallerID, void*)
 
 //------------------------------------------------------------------------------
 
-long AppWin::ClickRadioBtn(FXObject*, FXSelector CallerID, void*)
+long AppWin::ClickRadioBtn(FXObject *Sender, FXSelector CallerID, void*)
 {
     switch(FXSELID(CallerID))
     {
@@ -817,11 +835,15 @@ long AppWin::ClickRadioBtn(FXObject*, FXSelector CallerID, void*)
 	  FltrDesc->setText(BESSEL_DESC);
 	  break;
 
-        case ID_RL_INF: RLinf= 1; break;
+        case ID_CHECK_INF: RLinf= (FXCheckButton*)Sender->getCheck() ? 1 : 0; break;
 
         case ID_FREQ: BesselOpt= FREQ; break;
 
         case ID_TIME: BesselOpt= TIME; break;
+
+        case ID_LINEAR: Dimensions= LINEAR; break;
+
+        case ID_DECIBEL: Dimensions= DECIBEL; break;
     }
 
   return 1;
@@ -941,17 +963,42 @@ long AppWin::UpdateLineEdit(FXObject *Sender, FXSelector CallerID, void*)
 	                              Sender->handle(this, FXSEL(SEL_COMMAND, DISABLE), 0);
           break;
 
-        case ID_RIPPLE:
+       case ID_PB_FREQ:
+
+       case ID_SB_FREQ:
+
+       case ID_ATTN_PASS:
+
+       case ID_ATTN_STOP:
+
+          (FilterCharID == BESSEL) ? Sender->handle(this, FXSEL(SEL_COMMAND, DISABLE), 0) :
+	                             Sender->handle(this, FXSEL(SEL_COMMAND, ENABLE), 0);
+
+          break;
+
+       case ID_RIPPLE:
 
 	  (FilterCharID == CHEBYCHEV) ? Sender->handle(this, FXSEL(SEL_COMMAND, ENABLE), 0) :
 	                                Sender->handle(this, FXSEL(SEL_COMMAND, DISABLE), 0);
-	  break;
+	 break;
 
-        case ID_R:
+       case ID_R:
 
 	  (FilterClassID == PASSIVE) ? Sender->handle(this, FXSEL(SEL_COMMAND, ENABLE), 0) :
 	                               Sender->handle(this, FXSEL(SEL_COMMAND, DISABLE), 0);
 	  break;
+
+       case ID_CUTOFF:
+
+          (FilterCharID == BESSEL) ? Sender->handle(this, FXSEL(SEL_COMMAND, ENABLE), 0) :
+	                             Sender_handle(this, FXSEL(SEL_COMMAND, DISABLE), 0);
+          break;
+	  
+       case ID_ORDER_SPIN:
+
+         (FilterCharId == BESSEL) ? Sender->handle(this, FXSEL(SEL_COMMAND, ENABLE), 0) :
+	                            Sender->handle(this, FXSEL(SEL_COMMAND, DISABLE), 0);
+         break;
 
         default: Sender->handle(this, FXSEL(SEL_COMMAND, ENABLE), 0);
     }
@@ -998,6 +1045,16 @@ long AppWin::UpdateRadioBtn(FXObject *Sender, FXSelector CallerID, void*)
 
 	(BesselOpt == FREQ) ? Current->setCheck(TRUE) : Current->setCheck(FALSE);
 	break;
+
+      case ID_CHECK_INF:
+
+         if (FilterClassID == ACTIVE)
+	 {
+	     Sender->handle(this, FXSEL(SEL_COMMAND, DISABLE), 0);
+	     Sender->setCheck(FALSE);
+	 }
+         else Sender->handle(this, FXSEL(SEL_COMMAND, ENABLE), 0);
+	 break;
 
       case ID_DECIBEL:
        
@@ -1619,7 +1676,7 @@ const FXString& AppWin::FormatData(FXdouble Current, FXchar IDCode)
 
 //------------------------------------------------------------------------------
 
-void AppWin::WriteOut(const FXString &TxtDesc, const FXuint aFID)
+void AppWin::WriteOut(const FXuint aFID, const FXuint Preview)
 {
 /*
     Text Metrics:

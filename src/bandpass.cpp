@@ -48,7 +48,7 @@
 
 //                        Passive BPF's
 
-double Bandpass::L_Tune(double aR, double aFh, double aFl, BPuint aIDCode)
+double Bandpass::L_Tune(double aR, double aFh, double aFl, const BPuint aIDCode)
 {
     double BW, RetVal;
 
@@ -90,7 +90,7 @@ double Bandpass::L_Tune(double aR, double aFh, double aFl, BPuint aIDCode)
        Returns: Capacitance of the tuning capacitors (F)
 */
 
-double Bandpass::C_Tune(double aR, double aFh, double aFl, BPuint aIDCode)
+double Bandpass::C_Tune(double aR, double aFh, double aFl, const BPuint aIDCode)
 {
     double BW, RetVal;
 
@@ -133,7 +133,7 @@ double Bandpass::C_Tune(double aR, double aFh, double aFl, BPuint aIDCode)
                 non-resonant.
 */
 
-double Bandpass::C_Couple(double aR, double aFh, double aFl, BPuint aIDCode)
+double Bandpass::C_Couple(double aR, double aFh, double aFl, const BPuint aIDCode)
 {
     double BW, RetVal;
 
@@ -175,7 +175,7 @@ double Bandpass::C_Couple(double aR, double aFh, double aFl, BPuint aIDCode)
        Returns: inductance of coupling inductor (H), resonant.
 */
 
-double Bandpass::L_Couple(double aR, double aFh, double aFl, BPuint aIDCode)
+double Bandpass::L_Couple(double aR, double aFh, double aFl, const BPuint aIDCode)
 {
     double BW, RetVal;
 

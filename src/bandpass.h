@@ -50,10 +50,10 @@ namespace Bandpass
           Butterworth LPF's. Four varieties are presented here.
 */
 
-    double L_Tune(double, double, double, BPuint);
-    double C_Tune(double, double, double, BPuint);
-    double C_Couple(double, double, double, BPuint);
-    double L_Couple(double, double, double, BPuint);
+    double L_Tune(double, double, double, const BPuint);
+    double C_Tune(double, double, double, const BPuint);
+    double C_Couple(double, double, double, const BPuint);
+    double L_Couple(double, double, double, const BPuint);
 
 /*
                                    Active BPF's

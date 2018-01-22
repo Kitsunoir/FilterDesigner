@@ -40,6 +40,8 @@
 #define LAYOUT_CENTER LAYOUT_CENTER_X|LAYOUT_CENTER_Y
 #endif
 
+class DataDict;
+
 //------------------------------------------------------------------------------
 
 /*
@@ -134,6 +136,8 @@ class AppWin : public FXMainWindow
 	    ID_BP_STLC,
 	    ID_MULTIFB,
 	    ID_STATEVAR,
+	    ID_ANOTCH,
+	    ID_PNOTCH,
 	    ID_LOWPASS,
 	    ID_HIGHPASS,
 	    ID_CIN,
@@ -150,16 +154,17 @@ class AppWin : public FXMainWindow
 	    ID_LINEAR,
 	    ID_FREQ,
 	    ID_TIME,
+	    ID_CHECK_INF,
 
 //              Command Btn IDs
 
 	    ID_OK,
 	    ID_CLR,
 	    ID_DESIGN,
-	    ID_OK_PBPF,
-	    ID_OK_ABPF,
-	    ID_OK_PFLTR,
-	    ID_OK_AFLTR,
+	    ID_DES_PBPF,
+	    ID_DES_ABPF,
+	    ID_DES_PFLTR,
+	    ID_DES_AFLTR,
 	    ID_CLR_BPF,
 	    ID_CLR_FLTR,
 
@@ -174,6 +179,8 @@ class AppWin : public FXMainWindow
 	    ID_SB_FREQ,
 	    ID_ATTN_PASS,
 	    ID_ATTN_STOP,
+	    ID_ORDER_SPIN,
+	    ID_CUTOFF,
 	    ID_RIPPLE,
 
 	    ID_TITLE,
@@ -189,16 +196,22 @@ class AppWin : public FXMainWindow
 
 	enum
 	{
-	    CHAR_PANE,
+	    CHAR_PANE= FXSwitcher::ID_OPEN_FIRST,
 	    IMPL_PANE
 	};
 
         enum
 	{
             PROJ_NONE= 0,
-            PROJ_PEND,
-            PROJ_COMP
+            PROJ_PENDING,
+            PROJ_COMPLETE
         };
+
+	enum
+	{
+	    LINEAR= 0,
+	    DECIBEL
+	};
 
         enum
 	{
@@ -207,12 +220,13 @@ class AppWin : public FXMainWindow
 	};
 
         FXSwitcher     *MainPanel, *LPFPanel;
-        FXImageView    *MainDisp, *SchemosLbl;
-	FXImageFrame   *LPFDataView;
+        FXImageView    *MainDisp;
+	FXImageFrame   *SchemosLbl;
+	FXCanvas       *DataView;
         FXButton       *OKCmdBtn, *XnlCmdBtn, *ClrCmdBtn, *ExitCmdBtn;
         FXSpinner      *OrderSB;
         FXLabel        *StatusLbl, *RtrialLbl;
-        FXTextField    *UsrEntry[11];
+        FXTextField    *UsrEntry[12];
 
         FXPopup        *TplPop, *FltrPop, *Topl, *LPFchar;
         FXOptionMenu   *TplOpt, *FltrOpt, *LPFcharOM, *LPGTopOM;
@@ -230,7 +244,8 @@ class AppWin : public FXMainWindow
 
     private:
 
-        FXApp *ThisApp;
+        FXApp    *ThisApp;
+	DataDict *ProjData;
 
         FXuint FilterTypeID, FilterCharID, FilterClassID;
         FXuint ProjState;
@@ -238,6 +253,7 @@ class AppWin : public FXMainWindow
         FXuint SaveState;
 	FXuint RLinf;
         FXuint Order;
+	FXuint Dimensions;
 
         FXGIFImage *ProjSchemos, *Welcome;
         FXString   *TxtResults;
